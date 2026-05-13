@@ -26,14 +26,16 @@ public class LoadMoviesUseCaseImpl {
         StringTokenizer tokenizer = new StringTokenizer(str, ",");
         while (tokenizer.hasMoreElements()) {
             String token = tokenizer.nextToken();
-            if (token.contains(" and ")) {
-                StringTokenizer andTokenizer = new StringTokenizer(token, " and ");
-                while (andTokenizer.hasMoreElements()) {
-                    String andToken = andTokenizer.nextToken();
-                    tokens.add(andToken);
-                }
+            if (token.startsWith(" and ")) {
+                tokens.add(token.substring(5));
+            } else if (token.contains(" and ")) {
+                int andPosition = token.indexOf(" and ");
+                String leftToken = token.substring(0, andPosition);
+                String rightToken = token.substring(andPosition + 4);
+                tokens.add(leftToken.trim());
+                tokens.add(rightToken.trim());
             } else {
-                tokens.add(token);
+                tokens.add(token.trim());
             }
         }
         return tokens;
