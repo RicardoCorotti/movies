@@ -1,23 +1,47 @@
 package dev.ricardo.movies.application;
 
+import dev.ricardo.movies.domain.Movie;
+import dev.ricardo.movies.domain.Producer;
+import dev.ricardo.movies.domain.gateway.MovieGateway;
 import dev.ricardo.movies.infrastructure.MovieCsvLine;
+import dev.ricardo.movies.infrastructure.mapper.MovieMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.util.*;
 
 @Component
 public class LoadMoviesUseCaseImpl {
 
-    public void loadMovies(List<MovieCsvLine> movieCsvLines) {
-        for (MovieCsvLine movieCsvLine: movieCsvLines) {
-            List<String> studiosNamesList = getTokens(movieCsvLine.getStudios());
-            List<String> producersNamesList = getTokens(movieCsvLine.getProducers());
-            System.out.println(movieCsvLine.getTitle());
-            for (String producer: producersNamesList) {
-                System.out.println(producer);
+    private final MovieMapper mapper;
+    private final MovieGateway gateway;
+
+    @Autowired
+    public LoadMoviesUseCaseImpl(MovieMapper mapper, MovieGateway gateway) {
+        this.mapper = mapper;
+        this.gateway = gateway;
+    }
+
+    public void execute(List<MovieCsvLine> movieCsvLines) {
+        Map<String, Producer> distinctProducers = new HashMap<>();
+        for (MovieCsvLine csvLine: movieCsvLines) {
+            List<String> studiosNamesList = getTokens(csvLine.getStudios());
+            List<String> producerNames = getTokens(csvLine.getProducers());
+            Movie movie = Movie.newMovie(
+                    csvLine.getTitle(),
+                    Integer.valueOf(csvLine.getReleaseYear()),
+                    "yes".equals(csvLine.getWinner()));
+            movie = gateway.saveMovie(movie);
+            for (String producerName: producerNames) {
+                Producer producer = distinctProducers.get(producerName);
+                if (Objects.isNull(producer)) {
+                    producer = Producer.newProducer(producerName);
+                    distinctProducers.put(producerName, producer);
+                }
+                producer = gateway.saveProducer(producer);
+                movie.addProducer(producer);
             }
+            gateway.saveMovieProducer(movie);
         }
     }
 

@@ -24,6 +24,7 @@ public class MovieListCsvReader {
             CSVParser csvParser = new CSVParserBuilder().withSeparator(';').build();
             CSVReader csvReader = new CSVReaderBuilder(new InputStreamReader(inputStream, StandardCharsets.UTF_8))
                     .withCSVParser(csvParser)
+                    .withSkipLines(1)
                     .build();
             String[] fieldsFromCsvLine;
             while ((fieldsFromCsvLine = csvReader.readNext()) != null) {

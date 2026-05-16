@@ -4,7 +4,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
 import java.util.UUID;
 
 @Builder
@@ -12,8 +11,14 @@ import java.util.UUID;
 @Setter
 public class Producer {
 
-    private final UUID id;
+    private final UUID producerId;
     private final String name;
-    private final List<Movie> movies;
+
+    public static Producer newProducer(String name) {
+        return Producer.builder()
+            .producerId(UUID.randomUUID())
+            .name(name)
+            .build();
+    }
 
 }

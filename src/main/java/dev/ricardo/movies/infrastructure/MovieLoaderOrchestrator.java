@@ -22,7 +22,7 @@ public class MovieLoaderOrchestrator {
     @PostConstruct
     public void process() {
         List<MovieCsvLine> moviesFromCsv = reader.readMovies();
-        loader.loadMovies(moviesFromCsv);
+        loader.execute(moviesFromCsv);
     }
 
 }
