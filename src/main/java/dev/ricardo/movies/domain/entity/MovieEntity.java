@@ -22,8 +22,8 @@ public class MovieEntity {
     @Column(name="title", length=100, nullable=false)
     private String title;
 
-    @Column(name="release_year", nullable=false)
-    private Integer releaseYear;
+    @Column(name="ref_year", nullable=false)
+    private Integer year;
 
     @Column(name="winner")
     private Boolean winner;

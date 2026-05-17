@@ -1,5 +1,6 @@
 package dev.ricardo.movies.infrastructure.gateway;
 
+import dev.ricardo.movies.domain.IAwardedProducer;
 import dev.ricardo.movies.domain.Movie;
 import dev.ricardo.movies.domain.Producer;
 import dev.ricardo.movies.domain.entity.MovieEntity;
@@ -12,6 +13,7 @@ import dev.ricardo.movies.domain.repository.ProducerRepository;
 import dev.ricardo.movies.infrastructure.mapper.MovieMapper;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -56,6 +58,11 @@ public class MovieGatewayImpl implements MovieGateway {
             movieProducerEntity.setProducerId(producer.getProducerId());
             movieProducerRepository.save(movieProducerEntity);
         }
+    }
+
+    @Override
+    public List<IAwardedProducer> retrieveAwardedProducersOrderedByProducerAndYear() {
+        return producerRepository.retrieveAwardedProducersOrderedByProducerAndYear();
     }
 
 }

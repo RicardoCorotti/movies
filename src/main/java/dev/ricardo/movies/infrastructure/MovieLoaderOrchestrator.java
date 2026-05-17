@@ -1,6 +1,6 @@
 package dev.ricardo.movies.infrastructure;
 
-import dev.ricardo.movies.application.LoadMoviesUseCaseImpl;
+import dev.ricardo.movies.application.service.LoadMoviesService;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 
@@ -10,11 +10,11 @@ import java.util.List;
 public class MovieLoaderOrchestrator {
 
     private final MovieListCsvReader reader;
-    private final LoadMoviesUseCaseImpl loader;
+    private final LoadMoviesService loader;
 
     public MovieLoaderOrchestrator(
             MovieListCsvReader reader,
-            LoadMoviesUseCaseImpl loader) {
+            LoadMoviesService loader) {
         this.reader = reader;
         this.loader = loader;
     }

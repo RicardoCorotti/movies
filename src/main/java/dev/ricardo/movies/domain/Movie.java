@@ -16,15 +16,15 @@ public class Movie {
 
     private final UUID movieId;
     private final String title;
-    private final Integer releaseYear;
+    private final Integer year;
     private final Boolean winner;
     private Set<Producer> producers;
 
-    public static Movie newMovie(String title, Integer releaseYear, Boolean winner) {
+    public static Movie newMovie(String title, Integer year, Boolean winner) {
         return Movie.builder()
             .movieId(UUID.randomUUID())
             .title(title)
-            .releaseYear(releaseYear)
+            .year(year)
             .winner(winner)
             .producers(new HashSet<>())
             .build();

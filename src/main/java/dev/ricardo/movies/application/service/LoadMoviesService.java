@@ -1,4 +1,4 @@
-package dev.ricardo.movies.application;
+package dev.ricardo.movies.application.service;
 
 import dev.ricardo.movies.domain.Movie;
 import dev.ricardo.movies.domain.Producer;
@@ -11,13 +11,13 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 
 @Component
-public class LoadMoviesUseCaseImpl {
+public class LoadMoviesService {
 
     private final MovieMapper mapper;
     private final MovieGateway gateway;
 
     @Autowired
-    public LoadMoviesUseCaseImpl(MovieMapper mapper, MovieGateway gateway) {
+    public LoadMoviesService(MovieMapper mapper, MovieGateway gateway) {
         this.mapper = mapper;
         this.gateway = gateway;
     }
@@ -29,7 +29,7 @@ public class LoadMoviesUseCaseImpl {
             List<String> producerNames = getTokens(csvLine.getProducers());
             Movie movie = Movie.newMovie(
                     csvLine.getTitle(),
-                    Integer.valueOf(csvLine.getReleaseYear()),
+                    Integer.valueOf(csvLine.getYear()),
                     "yes".equals(csvLine.getWinner()));
             movie = gateway.saveMovie(movie);
             for (String producerName: producerNames) {

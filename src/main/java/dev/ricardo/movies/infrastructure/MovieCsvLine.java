@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 public class MovieCsvLine {
 
-    private final String releaseYear;
+    private final String year;
     private final String title;
     private final String studios;
     private final String producers;
@@ -17,7 +17,7 @@ public class MovieCsvLine {
 
     public static MovieCsvLine fromFieldArray(String[] fields) {
         return MovieCsvLine.builder()
-            .releaseYear(fields[0])
+            .year(fields[0])
             .title(fields[1])
             .studios(fields[2])
             .producers(fields[3])
