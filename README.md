@@ -10,7 +10,7 @@ Projeto desenvolvido em Java 21 e Spring Boot para carga em banco de dados de ar
 ### Docker
 > [!IMPORTANT]
 > # ATENÇÃO: DOCKER REQUERIDO!
-> ### ![Docker](https:img.shields.io/badge/Docker-Required-blue?style=for-the-badge&logo=docker&logoColor=white) 
+> ### ![Docker](https://img.shields.io/badge/Docker-Required-blue?style=for-the-badge&logo=docker&logoColor=white) 
 > Sem o **Docker**  instalado e ativo, a aplicação não será construída pois TestContainers são utilizados como tecnologia para testes integrados. Certifique-se de tê-lo instalado e rodando em sua máquina antes de prosseguir.
 
 ## Instruções de uso
