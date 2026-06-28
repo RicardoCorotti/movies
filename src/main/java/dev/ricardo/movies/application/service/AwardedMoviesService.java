@@ -5,25 +5,27 @@ import dev.ricardo.movies.domain.IAwardedProducer;
 import dev.ricardo.movies.domain.ProducerAwardsInterval;
 import dev.ricardo.movies.domain.TopAwardedProducers;
 import dev.ricardo.movies.domain.gateway.MovieGateway;
-import dev.ricardo.movies.infrastructure.mapper.MovieMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static java.util.stream.Collectors.groupingBy;
 
 @Component
 public class AwardedMoviesService {
 
-    private final MovieMapper mapper;
+    private static final Logger log = LoggerFactory.getLogger(AwardedMoviesService.class);
+
     private final MovieGateway gateway;
 
     @Autowired
-    public AwardedMoviesService(MovieMapper mapper, MovieGateway gateway) {
-        this.mapper = mapper;
+    public AwardedMoviesService(MovieGateway gateway) {
         this.gateway = gateway;
     }
 
@@ -36,42 +38,51 @@ public class AwardedMoviesService {
         List<ProducerAwardsInterval> minIntervals = new ArrayList<>();
         List<ProducerAwardsInterval> maxIntervals = new ArrayList<>();
 
+        int minInterval = Integer.MAX_VALUE;
+        int maxInterval = Integer.MIN_VALUE;
         for (String producerName: producersMap.keySet()) {
-            System.out.println(producerName);
+            log.info("Processing producer {}", producerName);
             List<IAwardedProducer> awards = producersMap.get(producerName);
             AwardYearComparator awardYearComparator = new AwardYearComparator();
             awards.sort(awardYearComparator);
-            int currentMaxInterval = awards.getLast().getRefYear() - awards.getFirst().getRefYear();
-            if (maxIntervals.isEmpty() || currentMaxInterval >= maxIntervals.get(0).getInterval()) {
-                if (!maxIntervals.isEmpty() && currentMaxInterval > maxIntervals.get(0).getInterval()) {
-                    maxIntervals.clear();
-                }
-                ProducerAwardsInterval producerAward = ProducerAwardsInterval.builder()
-                        .producer(producerName)
-                        .previousWin(awards.getFirst().getRefYear())
-                        .followingWin(awards.getLast().getRefYear())
-                        .interval(currentMaxInterval)
-                        .build();
-                maxIntervals.add(producerAward);
-            }
-            int previousRefYear = 0;
+            Integer previousAwardYear = null;
             for (IAwardedProducer award: awards) {
-                System.out.println("   " + award.getMovieTitle() + " - " + award.getRefYear());
-                if (previousRefYear != 0) {
-                    if (minIntervals.isEmpty() || award.getRefYear() - previousRefYear <= minIntervals.get(0).getInterval()) {
-                        if (!minIntervals.isEmpty() && award.getRefYear() - previousRefYear < maxIntervals.get(0).getInterval()) {
-                            minIntervals.clear();
-                        }
-                        ProducerAwardsInterval minInterval = ProducerAwardsInterval.builder()
-                                .producer(producerName)
-                                .previousWin(previousRefYear)
-                                .followingWin(award.getRefYear())
-                                .interval(award.getRefYear() - previousRefYear)
-                                .build();
-                        minIntervals.add(minInterval);
-                    }
+                log.info("Producer awarded: {} - Movie: {} - Year: {}", producerName, award.getMovieTitle(), award.getRefYear());
+                if (Objects.isNull(previousAwardYear)) {
+                    previousAwardYear = award.getRefYear();
+                    continue;
                 }
-                previousRefYear = award.getRefYear();
+                int yearsSincePreviousAward = award.getRefYear() - previousAwardYear;
+                // Verifying if this interval is less than the minimum interval found
+
+                if (yearsSincePreviousAward <= minInterval) {
+                    if (yearsSincePreviousAward < minInterval) {
+                        minInterval = yearsSincePreviousAward;
+                        minIntervals.clear();
+                    }
+                    ProducerAwardsInterval awardsInterval = ProducerAwardsInterval.builder()
+                            .producer(producerName)
+                            .previousWin(previousAwardYear)
+                            .followingWin(award.getRefYear())
+                            .interval(yearsSincePreviousAward)
+                            .build();
+                    minIntervals.add(awardsInterval);
+                }
+                // Verifying if this interval is greater than the maximum interval found
+                if (yearsSincePreviousAward >= maxInterval) {
+                    if (yearsSincePreviousAward > maxInterval) {
+                        maxInterval = yearsSincePreviousAward;
+                        maxIntervals.clear();
+                    }
+                    ProducerAwardsInterval awardsInterval = ProducerAwardsInterval.builder()
+                            .producer(producerName)
+                            .previousWin(previousAwardYear)
+                            .followingWin(award.getRefYear())
+                            .interval(yearsSincePreviousAward)
+                            .build();
+                    maxIntervals.add(awardsInterval);
+                }
+                previousAwardYear = award.getRefYear();
             }
         }
         return TopAwardedProducers.builder()

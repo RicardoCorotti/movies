@@ -4,6 +4,8 @@ import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
@@ -16,9 +18,11 @@ import java.util.List;
 @Component
 public class MovieListCsvReader {
 
-    public List<MovieCsvLine> readMovies() {
+    private static final Logger log = LoggerFactory.getLogger(MovieListCsvReader.class);
 
-        ClassPathResource resource = new ClassPathResource("/input/Movielist.csv");
+    public List<MovieCsvLine> readMovies(String filePath) {
+
+        ClassPathResource resource = new ClassPathResource(filePath);
         List<MovieCsvLine> movieCsvLines = new ArrayList<>();
         try (InputStream inputStream = resource.getInputStream()) {
             CSVParser csvParser = new CSVParserBuilder().withSeparator(';').build();
@@ -32,7 +36,7 @@ public class MovieListCsvReader {
                 movieCsvLines.add(movieCsvLine);
             }
         } catch (Exception e) {
-            System.out.println("Erro");
+            log.error("Exception when reading movies file: {}", e.getMessage(), e);
         }
         return movieCsvLines;
 

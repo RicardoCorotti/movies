@@ -14,4 +14,12 @@ public class ProducerAwardsInterval {
     private final Integer previousWin;
     private final Integer followingWin;
 
+    @Override
+    public String toString() {
+        return "\nProducer " + producer +
+                " - Previous: " + previousWin +
+                " - Following: " + followingWin +
+                " - Interval: " + interval;
+    }
+
 }

@@ -1,7 +1,8 @@
 package dev.ricardo.movies.infrastructure;
 
 import dev.ricardo.movies.application.service.LoadMoviesService;
-import jakarta.annotation.PostConstruct;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -19,9 +20,9 @@ public class MovieLoaderOrchestrator {
         this.loader = loader;
     }
 
-    @PostConstruct
+    @EventListener(ApplicationReadyEvent.class)
     public void process() {
-        List<MovieCsvLine> moviesFromCsv = reader.readMovies();
+        List<MovieCsvLine> moviesFromCsv = reader.readMovies("/input/Movielist.csv");
         loader.execute(moviesFromCsv);
     }
 
