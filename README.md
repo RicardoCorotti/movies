@@ -7,14 +7,17 @@ Projeto desenvolvido em Java 21 e Spring Boot para carga em banco de dados de ar
 ### Git
 ### Java 21
 ### Maven
+[!IMPORTANT]
+### Docker: Este projeto depende fortemente do Docker pois utiliza TestContainers como tecnologia para testes integrados. Certifique-se de tê-lo instalado e rodando em sua máquina antes de prosseguir.
 
 ## Instruções de uso
 
-1. Abra o projeto em seu IDE
-2. Compile/instale o projeto localmente
+1. Execute o Docker
+2. Abra o projeto em seu IDE
+3. Compile/instale o projeto localmente
    ```bash
    mvn clean install
    ```
-3. Execute o programa MoviesApplication.java
+4. Execute o programa MoviesApplication.java
 
-4. No seu navegador ou em ferramenta para execução de serviços REST, acesse o endereço http://localhost:8080/awarded-movies para verificar os resultados
+5. No seu navegador ou em ferramenta para execução de serviços REST, acesse o endereço http://localhost:8080/awarded-movies para verificar os resultados
