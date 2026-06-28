@@ -7,8 +7,8 @@ Projeto desenvolvido em Java 21 e Spring Boot para carga em banco de dados de ar
 ### Git
 ### Java 21
 ### Maven
-[!IMPORTANT]
-### Docker: Este projeto depende fortemente do Docker pois utiliza TestContainers como tecnologia para testes integrados. Certifique-se de tê-lo instalado e rodando em sua máquina antes de prosseguir.
+> [!IMPORTANT]
+> **O Docker é obrigatório:** Este projeto depende fortemente do Docker pois utiliza TestContainers como tecnologia para testes integrados. Certifique-se de tê-lo instalado e rodando em sua máquina antes de prosseguir.
 
 ## Instruções de uso
 
